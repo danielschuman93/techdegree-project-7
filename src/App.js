@@ -7,7 +7,7 @@ import apiKey from './config';
 import SearchForm from './SearchForm';
 import Nav from './Nav';
 import PhotoContainer from './PhotoContainer';
-import NotFound from './NotFound';
+import PageNotFound from './PageNotFound';
 
 class App extends Component {
 
@@ -16,8 +16,9 @@ class App extends Component {
     this.state = {
       photos: [],
       catsPhotos: [],
-      dogsPhotos: [],
-      figsPhotos: []
+      guitarsPhotos: [],
+      figsPhotos: [],
+      loading: true
     };
   }
 
@@ -29,10 +30,10 @@ class App extends Component {
         })
       });
 
-      axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=dogs&per_page=24&format=json&nojsoncallback=1`)
+      axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=guitars&per_page=24&format=json&nojsoncallback=1`)
       .then(response => {
         this.setState({
-          dogsPhotos: response.data.photos.photo
+          guitarsPhotos: response.data.photos.photo
         })
       });
 
@@ -48,7 +49,8 @@ class App extends Component {
     axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
       .then(response => {
         this.setState({
-          photos: response.data.photos.photo
+          photos: response.data.photos.photo,
+          loading: false
         })
       });
   }
@@ -61,11 +63,11 @@ class App extends Component {
           <Nav />
           <Switch>
             <Route exact path="/" render={ () => <Redirect to="/cats" /> } />
-            <Route path="/search/:query" render={ () => <PhotoContainer data={this.state.photos} /> } />
+            <Route path="/search/:query" render={ () => <PhotoContainer data={this.state.photos} loading={this.state.loading} /> } />
             <Route path="/cats" render={ () => <PhotoContainer data={this.state.catsPhotos} /> } />
-            <Route path="/dogs" render={ () => <PhotoContainer data={this.state.dogsPhotos} /> } />
+            <Route path="/guitars" render={ () => <PhotoContainer data={this.state.guitarsPhotos} /> } />
             <Route path="/figs" render={ () => <PhotoContainer data={this.state.figsPhotos} /> } />
-            <Route component={NotFound} />
+            <Route component={PageNotFound} />
           </Switch>
         </div>
       </BrowserRouter>
