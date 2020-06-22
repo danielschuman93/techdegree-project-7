@@ -45,6 +45,12 @@ class App extends Component {
       });
   }
 
+  resetLoadingState = () => {
+    this.setState({
+      loading: true
+    })
+  }
+
   performSearch = (query) => {
     axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
       .then(response => {
@@ -59,7 +65,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="container">
-          <SearchForm onSearch={this.performSearch} />
+          <SearchForm loadingState={this.resetLoadingState} onSearch={this.performSearch} />
           <Nav />
           <Switch>
             <Route exact path="/" render={ () => <Redirect to="/cats" /> } />
