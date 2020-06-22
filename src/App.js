@@ -1,6 +1,6 @@
 //App dependencies
 import React, {Component} from 'react';
-import {BrowserRouter, Route, Switch, Link} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import axios from 'axios';
 import apiKey from './config';
 //App Components
@@ -17,7 +17,7 @@ class App extends Component {
       photos: [],
       catsPhotos: [],
       dogsPhotos: [],
-      computersPhotos: []
+      figsPhotos: []
     };
   }
 
@@ -36,10 +36,10 @@ class App extends Component {
         })
       });
 
-      axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=computers&per_page=24&format=json&nojsoncallback=1`)
+      axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=figs&per_page=24&format=json&nojsoncallback=1`)
       .then(response => {
         this.setState({
-          computersPhotos: response.data.photos.photo
+          figsPhotos: response.data.photos.photo
         })
       });
   }
@@ -60,10 +60,11 @@ class App extends Component {
           <SearchForm onSearch={this.performSearch} />
           <Nav />
           <Switch>
-            {/* <Route path="/" render={ () => <PhotoContainer data={this.state.photos} /> } /> */}
+            <Route exact path="/" render={ () => <Redirect to="/cats" /> } />
+            <Route path="/search/:query" render={ () => <PhotoContainer data={this.state.photos} /> } />
             <Route path="/cats" render={ () => <PhotoContainer data={this.state.catsPhotos} /> } />
             <Route path="/dogs" render={ () => <PhotoContainer data={this.state.dogsPhotos} /> } />
-            <Route path="/computers" render={ () => <PhotoContainer data={this.state.computersPhotos} /> } />
+            <Route path="/figs" render={ () => <PhotoContainer data={this.state.figsPhotos} /> } />
             <Route component={NotFound} />
           </Switch>
         </div>
